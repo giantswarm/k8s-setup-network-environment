@@ -1,5 +1,5 @@
 FROM flynn/busybox
 
-COPY setup-network-environment /setup-network-environment
+COPY k8s-setup-network-environment /k8s-setup-network-environment
 
-ENTRYPOINT ["/setup-network-environment"]
+ENTRYPOINT ["/k8s-setup-network-environment"]
