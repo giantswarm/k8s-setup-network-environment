@@ -20,15 +20,21 @@ import (
 var (
 	defaultEnvironmentFilePath = "/etc/network-environment"
 	environmentFilePath        string
+	helpUsage                  bool
 )
 
 func init() {
 	log.SetFlags(0)
+	flag.BoolVar(&helpUsage, "h", false, "print help usage")
 	flag.StringVar(&environmentFilePath, "o", defaultEnvironmentFilePath, "environment file")
 }
 
 func main() {
 	flag.Parse()
+	if helpUsage {
+		log.Println("Provide the -o to specify the environment file path or ommit it and use the default.")
+		os.Exit(0)
+	}
 	tempFilePath := environmentFilePath + ".tmp"
 	tempFile, err := os.Create(tempFilePath)
 	if err != nil {
