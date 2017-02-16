@@ -1,0 +1,8 @@
+hash: e70cb73bc400f2139e2883ac14915feaa3dcbcd6ca876b6667ff5acd30565036
+updated: 2017-02-15T00:45:48.304934137+01:00
+imports:
+- name: github.com/docker/libcontainer
+  version: 5dc7ba0f24332273461e45bc49edcb4d5aa6c44c
+  subpackages:
+  - netlink
+testImports: []
