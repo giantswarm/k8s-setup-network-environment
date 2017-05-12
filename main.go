@@ -25,7 +25,7 @@ var (
 
 func init() {
 	log.SetFlags(0)
-	flag.BoolVar(&helpUsage, "h", false, "print help usage")
+	flag.BoolVar(&helpUsage, "help", false, "print help usage")
 	flag.StringVar(&environmentFilePath, "o", defaultEnvironmentFilePath, "environment file")
 }
 
