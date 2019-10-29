@@ -21,12 +21,14 @@ var (
 	defaultEnvironmentFilePath = "/etc/network-environment"
 	environmentFilePath        string
 	helpUsage                  bool
+	verboseOutput              bool
 )
 
 func init() {
 	log.SetFlags(0)
 	flag.BoolVar(&helpUsage, "help", false, "print help usage")
 	flag.StringVar(&environmentFilePath, "o", defaultEnvironmentFilePath, "environment file")
+	flag.BoolVar(&verboseOutput, "verbose", false, "enable verbose output")
 }
 
 func main() {
@@ -83,11 +85,26 @@ func writeEnvironment(w io.Writer) error {
 }
 
 func getDefaultGatewayIfaceName() (string, error) {
+	verboseLog("getDefaultGatewayIfaceName started")
 	routes, err := netlink.NetworkGetRoutes()
+	verboseLog("netlink.NetworkGetRoutes() called")
 	if err != nil {
+		verboseLog(fmt.Sprintf("netlink.NetworkGetRoutes() error: %s", err))
 		return "", err
 	}
-	for _, route := range routes {
+	verboseLog(fmt.Sprintf("netlink.NetworkGetRoutes() successful. Found %d routes", len(routes)))
+	for i, route := range routes {
+		ifaceName := "nil"
+		if route.Iface != nil {
+			ifaceName = route.Iface.Name
+		}
+
+		isDefault := "false"
+		if route.Default {
+			isDefault = "true"
+		}
+
+		verboseLog(fmt.Sprintf("Route %d: IFace = %s, Default = %s", i, ifaceName, isDefault))
 		if route.Default {
 			if route.Iface == nil {
 				return "", errors.New("found default route but could not determine interface")
@@ -96,4 +113,10 @@ func getDefaultGatewayIfaceName() (string, error) {
 		}
 	}
 	return "", errors.New("unable to find default route")
+}
+
+func verboseLog(msg string) {
+	if verboseOutput {
+		log.Println(msg)
+	}
 }
