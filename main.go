@@ -27,7 +27,6 @@ var (
 	defaultEnvironmentFilePath = "/etc/network-environment"
 	environmentFilePath        string
 	helpUsage                  bool
-	requireDefaultRoute        bool
 	verboseOutput              bool
 )
 
@@ -36,7 +35,6 @@ func init() {
 	flag.BoolVar(&helpUsage, "help", false, "print help usage")
 	flag.StringVar(&environmentFilePath, "o", defaultEnvironmentFilePath, "environment file")
 	flag.BoolVar(&verboseOutput, "verbose", false, "enable verbose output")
-	flag.BoolVar(&requireDefaultRoute, "require-default-route", false, "make the script fail if a default route is not found")
 }
 
 func main() {
@@ -63,12 +61,7 @@ func writeEnvironment(w io.Writer) error {
 	o := func() error {
 		defaultIfaceName, err := getDefaultGatewayIfaceName()
 		if err != nil {
-			if requireDefaultRoute {
-				return err
-			} else {
-				// A default route is not required; log it and keep going.
-				log.Println("WARN: A default route was not found, continuing anyway. Error was: ", err)
-			}
+			return err
 		}
 		interfaces, err := net.Interfaces()
 		if err != nil {
