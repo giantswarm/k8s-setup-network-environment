@@ -1,6 +1,0 @@
-package: github.com/giantswarm/k8s-setup-network-environment
-import:
-- package: github.com/docker/libcontainer
-  version: ~2.2.1
-  subpackages:
-  - netlink
