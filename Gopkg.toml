@@ -29,6 +29,10 @@
   name = "github.com/docker/libcontainer"
   version = "~2.2.1"
 
+[[constraint]]
+  branch = "master"
+  name = "github.com/giantswarm/backoff"
+
 [prune]
   go-tests = true
   unused-packages = true

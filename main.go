@@ -8,13 +8,19 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"github.com/giantswarm/backoff"
 	"io"
 	"log"
 	"net"
 	"os"
 	"strings"
+	"time"
 
 	"github.com/docker/libcontainer/netlink"
+)
+
+const (
+	retries = 3
 )
 
 var (
@@ -51,37 +57,45 @@ func main() {
 
 func writeEnvironment(w io.Writer) error {
 	var buffer bytes.Buffer
-	defaultIfaceName, err := getDefaultGatewayIfaceName()
-	if err != nil {
-		// A default route is not required; log it and keep going.
-		log.Println(err)
-	}
-	interfaces, err := net.Interfaces()
-	if err != nil {
-		return err
-	}
-	for _, iface := range interfaces {
-		addrs, err := iface.Addrs()
+
+	o := func() error {
+		defaultIfaceName, err := getDefaultGatewayIfaceName()
 		if err != nil {
 			return err
 		}
-		for _, addr := range addrs {
-			ip, _, err := net.ParseCIDR(addr.String())
-			// Record IPv4 network settings. Stop at the first IPv4 address
-			// found for the interface.
-			if err == nil && ip.To4() != nil {
-				buffer.WriteString(fmt.Sprintf("%s_IPV4=%s\n", strings.Replace(strings.ToUpper(iface.Name), ".", "_", -1), ip.String()))
-				if defaultIfaceName == iface.Name {
-					buffer.WriteString(fmt.Sprintf("DEFAULT_IPV4=%s\n", ip.String()))
+		interfaces, err := net.Interfaces()
+		if err != nil {
+			return err
+		}
+		for _, iface := range interfaces {
+			addrs, err := iface.Addrs()
+			if err != nil {
+				return err
+			}
+			for _, addr := range addrs {
+				ip, _, err := net.ParseCIDR(addr.String())
+				// Record IPv4 network settings. Stop at the first IPv4 address
+				// found for the interface.
+				if err == nil && ip.To4() != nil {
+					buffer.WriteString(fmt.Sprintf("%s_IPV4=%s\n", strings.Replace(strings.ToUpper(iface.Name), ".", "_", -1), ip.String()))
+					if defaultIfaceName == iface.Name {
+						buffer.WriteString(fmt.Sprintf("DEFAULT_IPV4=%s\n", ip.String()))
+					}
+					break
 				}
-				break
 			}
 		}
+		if _, err := buffer.WriteTo(w); err != nil {
+			return err
+		}
+
+		return nil
 	}
-	if _, err := buffer.WriteTo(w); err != nil {
-		return err
-	}
-	return nil
+
+	b := backoff.NewMaxRetries(retries, 10*time.Second)
+
+	err := backoff.Retry(o, b)
+	return err
 }
 
 func getDefaultGatewayIfaceName() (string, error) {
