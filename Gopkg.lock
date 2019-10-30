@@ -2,6 +2,14 @@
 
 
 [[projects]]
+  digest = "1:166438587ed45ac211dab8a3ecebf4fa0c186d0db63430fb9127bbc2e5fcdc67"
+  name = "github.com/cenkalti/backoff"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "5267b6dd4d2666b980a911bf235efa276222cbe2"
+  version = "v2.2.1"
+
+[[projects]]
   digest = "1:20776e445faca9486fb7736c2eb6c54467920c88eb0f4133dc9296419ac7158b"
   name = "github.com/docker/libcontainer"
   packages = ["netlink"]
@@ -9,9 +17,79 @@
   revision = "5dc7ba0f24332273461e45bc49edcb4d5aa6c44c"
   version = "v2.2.1"
 
+[[projects]]
+  branch = "master"
+  digest = "1:0dc70d5c96ccd9ef24d12f7c222447425447f7a2ec72556f2479137fe72f5476"
+  name = "github.com/giantswarm/backoff"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "4dd4911251929a0ac4c4f3d8c4bda482a9e09f30"
+
+[[projects]]
+  branch = "master"
+  digest = "1:d80347cb345b2986422040821735ae0efba8b8093b765b146b90796d926b85b4"
+  name = "github.com/giantswarm/microerror"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "e0ebc4ecf5a515b8f2a33257d08962e387120a77"
+
+[[projects]]
+  branch = "master"
+  digest = "1:90c6d64e0533a0fa637bf64c0fe978e9616971502acea37e76e53ab8c9a6545f"
+  name = "github.com/giantswarm/micrologger"
+  packages = [
+    ".",
+    "loggermeta",
+  ]
+  pruneopts = "UT"
+  revision = "d866337f739365a54de5924b8a7b29df17693ef8"
+
+[[projects]]
+  digest = "1:0cfcded8689c2c964c223650009c5dd9e283c22d57f18f2335aafa16cc22acf1"
+  name = "github.com/go-kit/kit"
+  packages = ["log"]
+  pruneopts = "UT"
+  revision = "4dc7be5d2d12881735283bcab7352178e190fc71"
+  version = "v0.6.0"
+
+[[projects]]
+  digest = "1:4062bc6de62d73e2be342243cf138cf499b34d558876db8d9430e2149388a4d8"
+  name = "github.com/go-logfmt/logfmt"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "07c9b44f60d7ffdfb7d8efe1ad539965737836dc"
+  version = "v0.4.0"
+
+[[projects]]
+  digest = "1:586ea76dbd0374d6fb649a91d70d652b7fe0ccffb8910a77468e7702e7901f3d"
+  name = "github.com/go-stack/stack"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "2fee6af1a9795aafbe0253a0cfbdf668e1fb8a9a"
+  version = "v1.8.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:926b6084b81f49359f67e48ef8b74f33ea8509afe8410d3b34789eaea02da898"
+  name = "github.com/juju/errgo"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "08cceb5d0b5331634b9826762a8fd53b29b86ad8"
+
+[[projects]]
+  branch = "master"
+  digest = "1:a64e323dc06b73892e5bb5d040ced475c4645d456038333883f58934abbf6f72"
+  name = "github.com/kr/logfmt"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "b84e30acd515aadc4b783ad4ff83aff3299bdfe0"
+
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  input-imports = ["github.com/docker/libcontainer/netlink"]
+  input-imports = [
+    "github.com/docker/libcontainer/netlink",
+    "github.com/giantswarm/backoff",
+  ]
   solver-name = "gps-cdcl"
   solver-version = 1
