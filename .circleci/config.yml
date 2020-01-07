@@ -1,3 +1,5 @@
+orbs:
+  architect: giantswarm/architect@0.4.5
 version: 2.1
 
 jobs:
@@ -21,7 +23,7 @@ jobs:
     - persist_to_workspace:
         root: .
         paths:
-        - ./cert-exporter
+        - ./k8s-setup-network-environment
         - ./architect
 
   deploy:
@@ -38,10 +40,16 @@ workflows:
   build:
     jobs:
       - build
-
+      - architect/push-to-docker-legacy:
+          name: push-k8s-setup-network-environment-to-aliyun-master
+          image: "registry-intl.cn-shanghai.aliyuncs.com/giantswarm/k8s-setup-network-environment"
+          username_envar: "ALIYUN_USERNAME"
+          password_envar: "ALIYUN_PASSWORD"
+          requires:
+            - build
       - deploy:
           filters:
             branches:
               only: master
           requires:
-          - build
+          - push-k8s-setup-network-environment-to-aliyun-master
