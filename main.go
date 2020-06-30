@@ -8,13 +8,14 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/giantswarm/backoff"
 	"io"
 	"log"
 	"net"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/giantswarm/backoff"
 
 	"github.com/docker/libcontainer/netlink"
 )
