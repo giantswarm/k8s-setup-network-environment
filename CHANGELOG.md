@@ -7,6 +7,8 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 
 ## [Unreleased]
 
+## [0.1.0] - 2020-06-30
+
 
 ## [0.0.0] - 2020-06-30
 
@@ -15,5 +17,6 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 - Add base release.
 - Remove `dep` lefrovers
 
-[Unreleased]: https://github.com/giantswarm/k8s-setup-network-environment/compare/v0.0.0...HEAD
+[Unreleased]: https://github.com/giantswarm/k8s-setup-network-environment/compare/v0.1.0...HEAD
+[0.1.0]: https://github.com/giantswarm/k8s-setup-network-environment/compare/v0.0.0...v0.1.0
 [0.0.0]: https://github.com/giantswarm/k8s-setup-network-environment/releases/tag/v0.0.0
