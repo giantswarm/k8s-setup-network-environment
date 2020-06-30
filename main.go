@@ -53,7 +53,10 @@ func main() {
 	if err := writeEnvironment(tempFile); err != nil {
 		log.Fatal(err)
 	}
-	os.Rename(tempFilePath, environmentFilePath)
+	err = os.Rename(tempFilePath, environmentFilePath)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func writeEnvironment(w io.Writer) error {
