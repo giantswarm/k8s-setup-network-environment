@@ -12,4 +12,5 @@ and this project's packages adheres to [Semantic Versioning](http://semver.org/s
 - Replace `dep` with go modules.
 
 
-[Unreleased]: https://github.com/giantswarm/docker-kubectl/compare/HEAD~1...HEAD
+[Unreleased]: https://github.com/giantswarm/k8s-setup-network-environment/compare/v.0.0.0...HEAD
+[0.0.0]: https://github.com/giantswarm/k8s-setup-network-environment/releases/tag/v0.0.0
