@@ -1,55 +1,54 @@
-orbs:
-  architect: giantswarm/architect@0.4.5
 version: 2.1
 
-jobs:
-  build:
-    machine: true
-    steps:
-    - checkout
-
-    - run:
-        name: Get architect binary
-        command: |
-          wget -q $(curl -sS -H "Authorization: token $RELEASE_TOKEN" https://api.github.com/repos/giantswarm/architect/releases/tags/v1.0.0 | grep browser_download_url | head -n 1 | cut -d '"' -f 4)
-          chmod +x ./architect
-          ./architect version
-
-    - run: ./architect build
-
-    - store_test_results:
-        path: /tmp/results
-
-    - persist_to_workspace:
-        root: .
-        paths:
-        - ./k8s-setup-network-environment
-        - ./architect
-
-  deploy:
-    machine: true
-    steps:
-    - checkout
-
-    - attach_workspace:
-        at: .
-
-    - run: ./architect deploy
+orbs:
+  architect: giantswarm/architect@0.9.0
 
 workflows:
   build:
     jobs:
-      - build
-      - architect/push-to-docker-legacy:
-          name: push-k8s-setup-network-environment-to-aliyun-master
+      - architect/go-build:
+          name: go-build
+          binary: k8s-setup-network-environment
+          filters:
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-docker:
+          context: architect
+          name: push-to-quay
+          image: "quay.io/giantswarm/k8s-setup-network-environment"
+          username_envar: "QUAY_USERNAME"
+          password_envar: "QUAY_PASSWORD"
+          requires:
+            - go-build
+          filters:
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-docker:
+          context: architect
+          name: push-to-aliyun-master
           image: "registry-intl.cn-shanghai.aliyuncs.com/giantswarm/k8s-setup-network-environment"
           username_envar: "ALIYUN_USERNAME"
           password_envar: "ALIYUN_PASSWORD"
           requires:
-            - build
-      - deploy:
+            - go-build
           filters:
             branches:
               only: master
+            tags:
+              only: /^v.*/
+
+      - architect/push-to-docker:
+          context: architect
+          name: push-to-aliyun-pr
+          image: "registry-intl.cn-shanghai.aliyuncs.com/giantswarm/k8s-setup-network-environment"
+          username_envar: "ALIYUN_USERNAME"
+          password_envar: "ALIYUN_PASSWORD"
           requires:
-          - push-k8s-setup-network-environment-to-aliyun-master
+            - go-build
+          filters:
+            branches:
+              ignore: master
+            tags:
+              ignore: /^v.*/

@@ -8,13 +8,14 @@ import (
 	"errors"
 	"flag"
 	"fmt"
-	"github.com/giantswarm/backoff"
 	"io"
 	"log"
 	"net"
 	"os"
 	"strings"
 	"time"
+
+	"github.com/giantswarm/backoff"
 
 	"github.com/docker/libcontainer/netlink"
 )
@@ -52,7 +53,10 @@ func main() {
 	if err := writeEnvironment(tempFile); err != nil {
 		log.Fatal(err)
 	}
-	os.Rename(tempFilePath, environmentFilePath)
+	err = os.Rename(tempFilePath, environmentFilePath)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 func writeEnvironment(w io.Writer) error {
