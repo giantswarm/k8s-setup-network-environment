@@ -73,7 +73,6 @@ func writeEnvironment(w io.Writer) error {
 			return err
 		}
 		for _, iface := range interfaces {
-
 			addrs, err := iface.Addrs()
 			if err != nil {
 				return err
@@ -136,7 +135,7 @@ func getDefaultGatewayIfaceName() (string, error) {
 			return defaultInterfaces[i] < defaultInterfaces[j]
 		})
 
-		verboseLog(fmt.Sprintf("Using %s interface as first default.", defaultInterfaces[0]))
+		verboseLog(fmt.Sprintf("Found %s as primary default interface.", defaultInterfaces[0]))
 		return defaultInterfaces[0], nil
 	}
 
