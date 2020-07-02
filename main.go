@@ -130,11 +130,7 @@ func getDefaultGatewayIfaceName() (string, error) {
 	}
 
 	if len(defaultInterfaces) > 0 {
-		// sort interfaces  so we pick the first one properly
-		sort.Slice(defaultInterfaces, func(i, j int) bool {
-			return defaultInterfaces[i] < defaultInterfaces[j]
-		})
-
+		sortInterfaces(defaultInterfaces)
 		verboseLog(fmt.Sprintf("Found %s as primary default interface.", defaultInterfaces[0]))
 		return defaultInterfaces[0], nil
 	}
@@ -146,4 +142,12 @@ func verboseLog(msg string) {
 	if verboseOutput {
 		log.Println(msg)
 	}
+}
+
+func sortInterfaces(s []string) {
+	// sort interfaces  so we pick the first one properly
+	sort.Slice(s, func(i, j int) bool {
+		return s[i] < s[j]
+	})
+
 }
