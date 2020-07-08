@@ -12,6 +12,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"sort"
 	"strings"
 	"time"
 
@@ -103,6 +104,8 @@ func writeEnvironment(w io.Writer) error {
 }
 
 func getDefaultGatewayIfaceName() (string, error) {
+	var defaultInterfaces []string
+
 	verboseLog("getDefaultGatewayIfaceName started")
 	routes, err := netlink.NetworkGetRoutes()
 	verboseLog("netlink.NetworkGetRoutes() called")
@@ -117,19 +120,21 @@ func getDefaultGatewayIfaceName() (string, error) {
 			ifaceName = route.Iface.Name
 		}
 
-		isDefault := "false"
-		if route.Default {
-			isDefault = "true"
-		}
-
-		verboseLog(fmt.Sprintf("Route %d: IFace = %s, Default = %s", i, ifaceName, isDefault))
+		verboseLog(fmt.Sprintf("Route %d: IFace = %s, Default = %t", i, ifaceName, route.Default))
 		if route.Default {
 			if route.Iface == nil {
 				return "", errors.New("found default route but could not determine interface")
 			}
-			return route.Iface.Name, nil
+			defaultInterfaces = append(defaultInterfaces, route.Iface.Name)
 		}
 	}
+
+	if len(defaultInterfaces) > 0 {
+		sortInterfaces(defaultInterfaces)
+		verboseLog(fmt.Sprintf("Found %s as primary default interface.", defaultInterfaces[0]))
+		return defaultInterfaces[0], nil
+	}
+
 	return "", errors.New("unable to find default route")
 }
 
@@ -137,4 +142,12 @@ func verboseLog(msg string) {
 	if verboseOutput {
 		log.Println(msg)
 	}
+}
+
+func sortInterfaces(s []string) {
+	// sort interfaces  so we pick the first one properly
+	sort.Slice(s, func(i, j int) bool {
+		return s[i] < s[j]
+	})
+
 }
