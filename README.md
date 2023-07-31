@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/giantswarm/k8s-setup-network-environment.svg?&style=shield&circle-token=81b98e92cd64f74029defa08a4731cc82ccac6fa)](https://circleci.com/gh/giantswarm/k8s-setup-network-environment)
+[![CircleCI](https://dl.circleci.com/status-badge/img/gh/giantswarm/k8s-setup-network-environment/tree/master.svg?style=svg)](https://dl.circleci.com/status-badge/redirect/gh/giantswarm/k8s-setup-network-environment/tree/master)
 
 # k8s-setup-network-environment
 This project provides a binary to create network environment file containing IPs
