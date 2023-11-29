@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  architect: giantswarm/architect@0.9.0
+  architect: giantswarm/architect@4.35.5
 
 workflows:
   build:
@@ -13,42 +13,12 @@ workflows:
             tags:
               only: /^v.*/
 
-      - architect/push-to-docker:
+      - architect/push-to-registries:
           context: architect
-          name: push-to-quay
-          image: "quay.io/giantswarm/k8s-setup-network-environment"
-          username_envar: "QUAY_USERNAME"
-          password_envar: "QUAY_PASSWORD"
+          name: push-to-registries
           requires:
             - go-build
           filters:
             tags:
               only: /^v.*/
 
-      - architect/push-to-docker:
-          context: architect
-          name: push-to-aliyun-master
-          image: "giantswarm-registry.cn-shanghai.cr.aliyuncs.com/giantswarm/k8s-setup-network-environment"
-          username_envar: "ALIYUN_USERNAME"
-          password_envar: "ALIYUN_PASSWORD"
-          requires:
-            - go-build
-          filters:
-            branches:
-              only: master
-            tags:
-              only: /^v.*/
-
-      - architect/push-to-docker:
-          context: architect
-          name: push-to-aliyun-pr
-          image: "giantswarm-registry.cn-shanghai.cr.aliyuncs.com/giantswarm/k8s-setup-network-environment"
-          username_envar: "ALIYUN_USERNAME"
-          password_envar: "ALIYUN_PASSWORD"
-          requires:
-            - go-build
-          filters:
-            branches:
-              ignore: master
-            tags:
-              ignore: /^v.*/
